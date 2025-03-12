@@ -75,7 +75,7 @@ class BookController extends Controller
 
     private function assignReservedBooks(Book $book)
     {
-        $reservations = $book->reservations()->where('status', 'reserved') ->orderBy('created_at', 'asc')->get();
+        $reservations = $book->reservations()->where('status', 'reserved')->orderBy('created_at', 'asc')->get();
 
         foreach ($reservations as $reservation) {
             if ($book->stock > 0) {

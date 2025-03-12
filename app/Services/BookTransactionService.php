@@ -11,6 +11,11 @@ class BookTransactionService
 {
     public function borrowBook(Book $book)
     {
+        $alreadyBorrowed = Auth::user()->books()->where('book_id', $book->id)->wherePivot('status', 'borrowed')->exists();
+
+        if ($alreadyBorrowed) {
+            return ['error' => 'You can only borrow one book at a time. Please return your current book first.'];
+        }
         if ($book->stock > 0) {
             $book->decrement('stock');
             Auth::user()->books()->attach($book->id, [

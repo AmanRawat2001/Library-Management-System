@@ -34,9 +34,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/books/{book}/borrow', [BookTransactionController::class, 'borrowBook'])->name('books.book');
     Route::post('/books/{book}/reserve', [BookTransactionController::class, 'reserveBook'])->name('books.reserve');
     Route::post('/books/{book}/return', [BookTransactionController::class, 'returnBook'])->name('books.return');
+    Route::post('/books/{book}/approve/{user}', [BookTransactionController::class, 'approveBorrowRequest'])->name('books.approve');
+    Route::post('/books/{book}/deny/{user}', [BookTransactionController::class, 'denyBorrowRequest'])->name('books.deny');
     Route::resource('categories', CategoryController::class);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
+});
+Route::middleware('auth', 'role:admin')->group(function () {
+    Route::get('/borrow-requests', [BookTransactionController::class, 'borrowRequests'])->name('borrow_requests');
 });
 
 require __DIR__.'/auth.php';

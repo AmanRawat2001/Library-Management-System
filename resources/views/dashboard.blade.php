@@ -17,8 +17,8 @@
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Book</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Borrowed
-                                        At</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Requested At</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Borrowed At</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Due Date</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions
                                     </th>
@@ -28,6 +28,7 @@
                                 @forelse (auth()->user()->books as $book)
                                     <tr>
                                         <td class="px-6 py-4 text-sm text-gray-900">{{ $book->title }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $book->pivot->requested_at }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-600">{{ $book->pivot->borrowed_at }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-600">{{ $book->pivot->due_date }}</td>
                                         <td class="px-6 py-4 text-sm">
@@ -37,6 +38,8 @@
                                                     <button type="submit"
                                                         class="text-green-500 hover:text-green-700">🔄 Return</button>
                                                 </form>
+                                                @elseif($book->pivot->status ==='pending')
+                                                    <span class="text-gray-500">🕒 Pending</span>
                                             @else
                                                 <span class="text-gray-500">✅ Returned</span>
                                             @endif

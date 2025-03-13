@@ -14,7 +14,7 @@ class BookController extends Controller
     public function __construct()
     {
         // only allow admin roles
-        $this->middleware('role:admin')->only('create', 'store', 'updated', 'edit');
+        $this->middleware('role:admin')->only('create', 'store', 'destroy', 'updated', 'edit');
     }
 
     public function index(Request $request)
@@ -80,9 +80,8 @@ class BookController extends Controller
         foreach ($reservations as $reservation) {
             if ($book->stock > 0) {
                 $reservation->user->books()->attach($book->id, [
-                    'status' => 'borrowed',
-                    'borrowed_at' => Carbon::now(),
-                    'due_date' => Carbon::now()->addDays(10),
+                    'status' => 'pending',
+                    'requested_at' => Carbon::now(),
                 ]);
                 $book->decrement('stock');
                 $reservation->delete();

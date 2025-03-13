@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BookUser extends Model
 {
@@ -48,5 +49,21 @@ class BookUser extends Model
     public function scopePendingBorrowRequests($query)
     {
         return $query->where('status', 'pending')->with(['book', 'user']);
+    }
+
+    public static function topReader()
+    {
+        return self::select('user_id', DB::raw('COUNT(book_id) as books_read'))
+            ->groupBy('user_id')
+            ->orderBy('books_read', 'DESC')
+            ->limit(10);
+    }
+
+    public static function topBook()
+    {
+        return self::select('book_id', DB::raw('COUNT(user_id) as times_read'))
+            ->groupBy('book_id')
+            ->orderBy('times_read', 'DESC')
+            ->limit(10);
     }
 }

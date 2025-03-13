@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Category Management') }}
+            {{ __('Category') }}
         </h2>
     </x-slot>
 
@@ -13,12 +13,12 @@
                     class="border border-gray-300 rounded-l px-4 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"
                     placeholder="Search ...">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r">
-                    🔍 Search
+                    Search
                 </button>
             </form>
             <a href="{{ route('categories.create') }}"
                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
-                ➕ Add categories
+             Add categories
             </a>
         </div>
 
@@ -39,14 +39,14 @@
                             <td class="px-6 py-4 text-center text-sm text-gray-600">{{ $category->name }}</td>
                             <td class="px-6 py-4 text-center text-sm font-medium space-x-3">
                                 <a href="{{ route('categories.show', $category->id) }}"
-                                    class="text-blue-500 hover:text-blue-700">👁 View</a>
+                                    class="text-blue-500 hover:text-blue-700"> View</a>
                                 @if (auth()->user()->role == 'admin')
                                     <a href="{{ route('categories.edit', $category->id) }}"
-                                        class="text-yellow-500 hover:text-yellow-700">✏️ Edit</a>
+                                        class="text-yellow-500 hover:text-yellow-700"> Edit</a>
 
                                     <button type="button" class="text-red-500 hover:text-red-700 deleteButton"
                                         data-id="{{ $category->id }}">
-                                        🗑 Delete
+                                        Delete
                                     </button>
                                     <form id="deleteForm-{{ $category->id }}"
                                         action="{{ route('categories.destroy', $category->id) }}" method="POST" class="hidden">

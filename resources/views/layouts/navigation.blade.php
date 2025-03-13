@@ -146,7 +146,40 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('books.index')" :active="request()->routeIs('books.*')">
+                {{ __('Books') }}
+            </x-responsive-nav-link>
+        </div>
+        @if (Auth::user()->isAdmin())
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                    {{ __('Categories') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('borrow_requests')" :active="request()->routeIs('borrow_requests')">
+                    {{ __('Borrow Requests') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('return_requests')" :active="request()->routeIs('return_requests')">
+                    {{ __('Return Requests') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
+        @if (Auth::user()->isVisitor())
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('borrowed_books')" :active="request()->routeIs('borrowed_books')">
+                    {{ __('Borrowed Books') }}
+                </x-responsive-nav-link>
+            </div>
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('reserved_books')" :active="request()->routeIs('reserved_books')">
+                    {{ __('Reserved Books') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">

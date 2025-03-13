@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Books Managment') }}
+            {{ __('Books') }}
         </h2>
     </x-slot>
 
@@ -13,13 +13,13 @@
                     class="border border-gray-300 rounded-l px-4 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"
                     placeholder="Search ...">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r">
-                    🔍 Search
+                    Search
                 </button>
             </form>
             @if (Auth::user()->isAdmin())
                 <a href="{{ route('books.create') }}"
                     class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
-                    ➕ Add books
+                    Add books
                 </a>
             @endif
         </div>
@@ -47,29 +47,28 @@
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $book->category?->name }}</td>
                             <td class="px-6 py-4 text-sm font-medium flex space-x-3">
                                 <a href="{{ route('books.show', $book->id) }}"
-                                    class="text-blue-500 hover:text-blue-700">👁 View</a>
+                                    class="text-blue-500 hover:text-blue-700">View</a>
                                 @if (auth()->user()->role == 'visitor')
                                     @if ($book->stock > 0)
                                         <form action="{{ route('books.book', $book->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="text-green-500 hover:text-green-700">📖
-                                                Book</button>
+                                            <button type="submit" class="text-green-500 hover:text-green-700">
+                                                Booked</button>
                                         </form>
                                     @else
                                         <form action="{{ route('books.reserve', $book->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="text-yellow-500 hover:text-yellow-700">⏳
-                                                Reserve</button>
+                                            <button type="submit" class="text-yellow-500 hover:text-yellow-700">                                                Reserve</button>
                                         </form>
                                     @endif
                                 @endif
-                                @if (auth()->user()->role == 'admin')
+                                @if (auth()->user()->isAdmin())
                                     <a href="{{ route('books.edit', $book->id) }}"
-                                        class="text-yellow-500 hover:text-yellow-700">✏️ Edit</a>
+                                        class="text-yellow-500 hover:text-yellow-700">Edit</a>
 
                                     <button type="button" class="text-red-500 hover:text-red-700 deleteButton"
                                         data-id="{{ $book->id }}">
-                                        🗑 Delete
+                                        Delete
                                     </button>
                                     <form id="deleteForm-{{ $book->id }}"
                                         action="{{ route('books.destroy', $book->id) }}" method="POST" class="hidden">

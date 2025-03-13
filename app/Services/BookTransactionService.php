@@ -177,10 +177,12 @@ class BookTransactionService
 
         return BookUser::pendingBorrowRequests()->get();
     }
+
     public function getBooks()
     {
         return Auth::user()->books()->paginate(10);
     }
+
     public function getReservedBooks()
     {
         return Auth::user()->reservations()->paginate(10);

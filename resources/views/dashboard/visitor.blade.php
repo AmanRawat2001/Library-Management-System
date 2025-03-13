@@ -1,9 +1,8 @@
 @if (auth()->user()->isVisitor())
-    <div class="p-6 lg:p-8 bg-white border-b border-gray-200 shadow-md rounded-lg">
-        <h1 class="mt-6 text-3xl font-semibold text-gray-900">Visitor Dashboard</h1>
-
+    <div class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl font-semibold text-center text-gray-900 mb-6">Visitor Dashboard</h1>
         @php
-            $userId = Auth::id(); // Get authenticated user ID
+            $userId = Auth::id();
             $totalBooks = App\Models\BookUser::where('user_id', $userId)->count();
             $borrowed = App\Models\BookUser::where('user_id', $userId)->where('status', 'borrowed')->count();
             $returned = App\Models\BookUser::where('user_id', $userId)->where('status', 'returned')->count();
@@ -13,28 +12,36 @@
                 ->count();
             $reserved = App\Models\Reservation::where('user_id', $userId)->where('status', 'reserved')->count();
         @endphp
-
         <!-- Flexbox for Layout -->
         <div class="flex flex-col md:flex-row gap-6">
             <!-- Left Side: Statistics -->
-            <div class="w-full md:w-1/2 grid grid-cols-2 gap-6">
-                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Total Books Taken</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Total Books -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Total Books</h3>
                     <p class="text-3xl font-bold text-blue-600">{{ $totalBooks }}</p>
                 </div>
-                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+
+                <!-- Borrowed Books -->
+                <div class="bg-yellow-100 p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold text-gray-700">Books Borrowed</h3>
                     <p class="text-3xl font-bold text-yellow-600">{{ $borrowed }}</p>
                 </div>
-                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+
+                <!-- Pending Returns -->
+                <div class="bg-red-100 p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold text-gray-700">Pending Returns</h3>
                     <p class="text-3xl font-bold text-red-600">{{ $pendingReturn }}</p>
                 </div>
-                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+
+                <!-- Pending Reservations -->
+                <div class="bg-purple-100 p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold text-gray-700">Reservations Pending</h3>
                     <p class="text-3xl font-bold text-purple-600">{{ $pendingReservation }}</p>
                 </div>
-                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+
+                <!-- Confirmed Reservations -->
+                <div class="bg-indigo-100 p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold text-gray-700">Reservations Confirmed</h3>
                     <p class="text-3xl font-bold text-indigo-600">{{ $reserved }}</p>
                 </div>

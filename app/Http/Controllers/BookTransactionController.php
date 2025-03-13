@@ -85,17 +85,18 @@ class BookTransactionController extends Controller
 
         return redirect()->back()->with(key($result), reset($result));
     }
+
     public function borrowedBooks()
     {
         $borrowedBooks = $this->bookTransactionService->getBooks();
 
         return view('visitor.borrowed-books', compact('borrowedBooks'));
     }
+
     public function reservedBooks()
     {
         $reservedBooks = $this->bookTransactionService->getReservedBooks();
 
         return view('visitor.reserved-books', compact('reservedBooks'));
     }
-
 }

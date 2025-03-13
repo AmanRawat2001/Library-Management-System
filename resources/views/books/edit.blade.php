@@ -7,7 +7,7 @@
             <div class="flex space-x-2">
                 <a href="{{ route('books.index') }}"
                     class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded sm:w-auto text-center">
-                    ⬅️ Back to List
+                    Back to List
                 </a>
             </div>
         </div>
@@ -77,11 +77,11 @@
                 <div class="flex items-center justify-between px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <a href="{{ route('books.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md">
-                        ⬅️ Back to List
+                        Back to List
                     </a>
                     <button type="submit"
                         class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-md shadow-md">
-                        💾 Update Book
+                        Update Book
                     </button>
                 </div>
             </form>

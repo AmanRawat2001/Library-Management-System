@@ -1,82 +1,76 @@
 @if (auth()->user()->isVisitor())
-    <h3 class="text-lg font-semibold">My Borrowed Books</h3>
-    <table class="min-w-full border-collapse divide-y divide-gray-200">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Book</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Requested At</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Borrowed At</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Pending Return</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Due Date</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            @forelse (auth()->user()->books as $book)
-                <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900">{{ $book->title }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900">{{ $book->pivot->requested_at }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $book->pivot->borrowed_at }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $book->pivot->return_requested_at }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $book->pivot->due_date }}</td>
-                    <td class="px-6 py-4 text-sm">
-                        @if ($book->pivot->status === 'borrowed')
-                            <form action="{{ route('books.return', $book->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="text-green-500 hover:text-green-700">🔄 Return</button>
-                            </form>
-                        @elseif($book->pivot->status === 'pending')
-                            <span class="text-gray-500">🕒 Pending</span>
-                        @elseif($book->pivot->status === 'pending_return')
-                            <span class="text-gray-500">🕒 Pending Return</span>
-                        @else
-                            <span class="text-gray-500">✅ Returned</span>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900" colspan="3">No borrowed books</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <div class="p-6 lg:p-8 bg-white border-b border-gray-200 shadow-md rounded-lg">
+        <h1 class="mt-6 text-3xl font-semibold text-gray-900">Visitor Dashboard</h1>
 
-    <h3 class="text-lg font-semibold mt-6">My Reserved Books</h3>
-    <table class="min-w-full border-collapse divide-y divide-gray-200">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Book</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Reserved At</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Reserved Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            @forelse (auth()->user()->reservations as $reservation)
-                <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900">{{ $reservation->book->title }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $reservation->created_at }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $reservation->status }}</td>
-                    @if ($reservation->status === 'pending')
-                        <td class="px-6 py-4 text-sm">
-                            <form action="{{ route('books.cancel', $reservation->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-green-500 hover:text-green-700">Cancel Reservation</button>
-                            </form>
-                        </td>
-                    @else
-                        <td class="px-6 py-4 text-sm">
-                            <span class="text-gray-500">✅ Reserved</span>
-                        </td>
-                    @endif
-                </tr>
-            @empty
-                <tr>
-                    <td class="px-6 py-4 text-sm text-gray-900" colspan="2">No reserved books</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+        @php
+            $userId = Auth::id(); // Get authenticated user ID
+            $totalBooks = App\Models\BookUser::where('user_id', $userId)->count();
+            $borrowed = App\Models\BookUser::where('user_id', $userId)->where('status', 'borrowed')->count();
+            $returned = App\Models\BookUser::where('user_id', $userId)->where('status', 'returned')->count();
+            $pendingReturn = App\Models\BookUser::where('user_id', $userId)->where('status', 'pending_return')->count();
+            $pendingReservation = App\Models\Reservation::where('user_id', $userId)
+                ->where('status', 'pending')
+                ->count();
+            $reserved = App\Models\Reservation::where('user_id', $userId)->where('status', 'reserved')->count();
+        @endphp
+
+        <!-- Flexbox for Layout -->
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Left Side: Statistics -->
+            <div class="w-full md:w-1/2 grid grid-cols-2 gap-6">
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Total Books Taken</h3>
+                    <p class="text-3xl font-bold text-blue-600">{{ $totalBooks }}</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Books Borrowed</h3>
+                    <p class="text-3xl font-bold text-yellow-600">{{ $borrowed }}</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Pending Returns</h3>
+                    <p class="text-3xl font-bold text-red-600">{{ $pendingReturn }}</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Reservations Pending</h3>
+                    <p class="text-3xl font-bold text-purple-600">{{ $pendingReservation }}</p>
+                </div>
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">Reservations Confirmed</h3>
+                    <p class="text-3xl font-bold text-indigo-600">{{ $reserved }}</p>
+                </div>
+            </div>
+
+            <!-- Right Side: Pie Chart -->
+            <div class="w-full md:w-1/2 flex justify-center items-center">
+                <canvas id="visitorTaskPieChart" class="w-80 h-80"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart Script -->
+        <script>
+            var ctx = document.getElementById("visitorTaskPieChart").getContext("2d");
+            var visitorTaskPieChart = new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: ["Borrowed", "Pending Return", "Returned", "Pending Reservation", "Reserved"],
+                    datasets: [{
+                        data: [{{ $borrowed }}, {{ $pendingReturn }}, {{ $returned }},
+                            {{ $pendingReservation }}, {{ $reserved }}
+                        ],
+                        backgroundColor: ["#facc15", "#34d399", "#ef4444", "#f87171", "#fbbf24"],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
 @endif

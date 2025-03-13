@@ -24,6 +24,7 @@ class BookTransactionService
             Auth::user()->books()->attach($book->id, [
                 'status' => 'pending',
                 'requested_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
             ]);
             // Notify admin
             NotificationHelper::notifyAdmin('User '.Auth::user()->name." has requested to borrow '{$book->title}'.");
@@ -80,6 +81,7 @@ class BookTransactionService
             Auth::user()->books()->updateExistingPivot($book->id, [
                 'status' => 'pending_return',
                 'return_requested_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
             NotificationHelper::notifyAdmin('User '.Auth::user()->name." has requested to return '{$book->title}'. Please review.");
 
@@ -100,6 +102,7 @@ class BookTransactionService
                 'status' => 'borrowed',
                 'borrowed_at' => Carbon::now(),
                 'due_date' => Carbon::now()->addDays(10),
+                'updated_at' => Carbon::now(),
             ]);
             $user->notify(new BorrowRequestNotification('approved', $book->title));
             NotificationHelper::notifyAdmin("User {$user->name} has borrowed '{$book->title}'.");
@@ -128,6 +131,7 @@ class BookTransactionService
             $user->books()->updateExistingPivot($book->id, [
                 'status' => 'returned',
                 'returned_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
             $user->notify(new BorrowRequestNotification('approved', $book->title));
             NotificationHelper::notifyAdmin("User {$user->name} has returned '{$book->title}'.");
@@ -138,6 +142,7 @@ class BookTransactionService
                 $reservation->user->books()->attach($book->id, [
                     'status' => 'pending',
                     'requested_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
                 ]);
 
                 $reservation->update(['status' => 'reserved']);
@@ -171,5 +176,13 @@ class BookTransactionService
     {
 
         return BookUser::pendingBorrowRequests()->get();
+    }
+    public function getBooks()
+    {
+        return Auth::user()->books()->paginate(10);
+    }
+    public function getReservedBooks()
+    {
+        return Auth::user()->reservations()->paginate(10);
     }
 }

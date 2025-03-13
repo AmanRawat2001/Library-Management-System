@@ -20,14 +20,14 @@ class BookTransactionController extends Controller
     {
         $borrowRequests = $this->bookTransactionService->getBorrowRequests();
 
-        return view('borrow_requests', compact('borrowRequests'));
+        return view('admin.borrow_requests', compact('borrowRequests'));
     }
 
     public function returnRequests()
     {
         $returnRequests = $this->bookTransactionService->getReturnRequests();
 
-        return view('return_requests', compact('returnRequests'));
+        return view('admin.return_requests', compact('returnRequests'));
     }
 
     public function borrowBook(Book $book)
@@ -85,4 +85,17 @@ class BookTransactionController extends Controller
 
         return redirect()->back()->with(key($result), reset($result));
     }
+    public function borrowedBooks()
+    {
+        $borrowedBooks = $this->bookTransactionService->getBooks();
+
+        return view('visitor.borrowed-books', compact('borrowedBooks'));
+    }
+    public function reservedBooks()
+    {
+        $reservedBooks = $this->bookTransactionService->getReservedBooks();
+
+        return view('visitor.reserved-books', compact('reservedBooks'));
+    }
+
 }

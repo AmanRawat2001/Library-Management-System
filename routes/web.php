@@ -30,11 +30,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     Route::resource('books', BookController::class);
+
     Route::post('/books/{book}/borrow', [BookTransactionController::class, 'borrowBook'])->name('books.book');
     Route::post('/books/{book}/reserve', [BookTransactionController::class, 'reserveBook'])->name('books.reserve');
     Route::delete('/books/cancel-reservation/{reservation}', [BookTransactionController::class, 'cancelReservation'])->name('books.cancel');
     Route::post('/books/{book}/return', [BookTransactionController::class, 'returnBook'])->name('books.return');
+    Route::get('borrowed_books', [BookTransactionController::class, 'borrowedBooks'])->name('borrowed_books');
+    Route::get('reserved_books', [BookTransactionController::class, 'reservedBooks'])->name('reserved_books');
+
     Route::resource('notifications', NotificationController::class)->only(['index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');

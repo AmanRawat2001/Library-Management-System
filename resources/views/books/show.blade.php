@@ -1,19 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Book Details - {{ $book->title }}
-        </h2>
+        <div class="flex flex-col sm:flex-row justify-between items-center mr-4">
+            <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight mb-2 sm:mb-0">
+                Book Details - {{ $book->title }}
+            </h2>
+            <div class="flex flex-col sm:flex-row items-center sm:space-x-4 w-full sm:w-auto">
+                <div class="flex space-x-2">
+                    <a href="{{ route('books.index') }}"
+                        class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded sm:w-auto text-center">
+                        Back to list
+                    </a>
+                    @if(Auth::user()->isAdmin())
+                    <button id="book-history"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded  sm:w-auto text-center">
+                        History
+                    </button>
+                    @endif
+                </div>
+            </div>
+        </div>
     </x-slot>
 
     <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
-        <!-- Back Button -->
-        <div class="mb-6">
-            <a href="{{ route('books.index') }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md">
-                ⬅️ Back to List
-            </a>
-        </div>
-
         <!-- role Details Card -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="px-6 py-4">
@@ -52,4 +60,19 @@
             </div>
         </div>
     </div>
+    <div id="book-history-model"
+        class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto flex items-center justify-center">
+        <div class="relative mx-auto p-5 border h-auto w-[95%] md:w-[80%] shadow-lg rounded-md bg-white">
+            <button id="close-payment-modal" class="absolute top-2 right-2 text-gray-500">✕</button>
+            @include('books.history')
+        </div>
+    </div>
+    <script>
+        document.getElementById('book-history').addEventListener('click', function() {
+            document.getElementById('book-history-model').classList.remove('hidden');
+        });
+        document.getElementById('close-payment-modal').addEventListener('click', function() {
+            document.getElementById('book-history-model').classList.add('hidden');
+        });
+    </script>
 </x-app-layout>

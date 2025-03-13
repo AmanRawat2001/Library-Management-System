@@ -21,7 +21,7 @@
                         <tr>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->user->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->book->title }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $request->requested_at }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $request->return_requested_at }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <form action="{{ route('return.approve', [$request->book_id, $request->user_id]) }}" method="POST">
                                     @csrf

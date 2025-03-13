@@ -38,6 +38,18 @@
                         </x-nav-link>
                     </div>
                 @endif
+                @if (Auth::user()->isVisitor())
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('borrowed_books')" :active="request()->routeIs('borrowed_books')">
+                            {{ __('Borrowed Books') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('reserved_books')" :active="request()->routeIs('reserved_books')">
+                            {{ __('Reserved Books') }}
+                        </x-nav-link>
+                    </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->

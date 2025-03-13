@@ -33,6 +33,26 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <li class="relative" x-data="{ showNotifications: false }">
+                    <button @click="showNotifications = !showNotifications" class="relative">
+                        🛎 Notifications ({{ auth()->user()->unreadNotifications->count() }})
+                    </button>
+                    <div x-show="showNotifications" @click.away="showNotifications = false"
+                         class="absolute right-0 bg-white border border-gray-300 shadow-lg p-2 mt-2 w-64">
+                        @forelse(auth()->user()->unreadNotifications as $notification)
+                            <div class="p-2 border-b">
+                                📢 {{ $notification->data['message'] }}
+                                <small class="text-gray-500">{{ $notification->created_at->diffForHumans() }}</small>
+                                <form action="{{ route('notifications.read', $notification->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-blue-500">Mark as Read</button>
+                                </form>
+                            </div>
+                        @empty
+                            <p class="p-2">No new notifications.</p>
+                        @endforelse
+                    </div>
+                </li>                
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button

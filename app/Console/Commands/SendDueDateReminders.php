@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\DueDateReminderMail;
 use App\Models\User;
+use App\Notifications\DueDateReminderNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -22,7 +23,7 @@ class SendDueDateReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Send email reminders for books due soon';
+    protected $description = 'Send email &  notifications for books due soon';
 
     /**
      * Execute the console command.
@@ -37,7 +38,10 @@ class SendDueDateReminders extends Command
 
         foreach ($users as $user) {
             foreach ($user->books()->wherePivot('status', 'borrowed')->wherePivot('due_date', '<=', $dueSoon)->get() as $book) {
-                Mail::to($user->email)->send(new DueDateReminderMail($user, $book, $book->pivot->due_date));
+                // for the email only
+                // Mail::to($user->email)->send(new DueDateReminderMail($user, $book, $book->pivot->due_date));
+                // for the notification  and email
+                $user->notify(new DueDateReminderNotification($book, $book->pivot->due_date));
             }
         }
         $this->info('Due date reminder emails sent successfully.');

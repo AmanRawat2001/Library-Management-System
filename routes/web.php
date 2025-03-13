@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/books/{book}/approve/{user}', [BookTransactionController::class, 'approveBorrowRequest'])->name('books.approve');
     Route::post('/books/{book}/deny/{user}', [BookTransactionController::class, 'denyBorrowRequest'])->name('books.deny');
     Route::resource('categories', CategoryController::class);
+    Route::resource('notifications', NotificationController::class)->only(['index']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
@@ -83,6 +84,7 @@ class BookController extends Controller
                     'status' => 'pending',
                     'requested_at' => Carbon::now(),
                 ]);
+                NotificationHelper::notifyAdmin("{$reservation->user->name} has been assigned the book {$book->title}");
                 $book->decrement('stock');
                 $reservation->delete();
             } else {

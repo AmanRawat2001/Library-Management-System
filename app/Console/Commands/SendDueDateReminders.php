@@ -35,7 +35,11 @@ class SendDueDateReminders extends Command
         $users = User::whereHas('books', function ($query) use ($dueSoon) {
             $query->where('status', 'borrowed')->where('due_date', '<=', $dueSoon);
         })->get();
+        if ($users->isEmpty()) {
+            $this->info('No due date reminders to send.');
 
+            return;
+        }
         foreach ($users as $user) {
             foreach ($user->books()->wherePivot('status', 'borrowed')->wherePivot('due_date', '<=', $dueSoon)->get() as $book) {
                 // for the email only

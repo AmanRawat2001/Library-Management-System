@@ -32,7 +32,6 @@
                             {{ __('Borrow Requests') }}
                         </x-nav-link>
                     </div>
-                    
                 @endif
             </div>
 
@@ -42,9 +41,11 @@
                     <button @click="showNotifications = !showNotifications" class="relative">
                         🛎 Notifications ({{ auth()->user()->unreadNotifications->count() }})
                     </button>
+
                     <div x-show="showNotifications" @click.away="showNotifications = false"
-                         class="absolute right-0 bg-white border border-gray-300 shadow-lg p-2 mt-2 w-64">
-                        @forelse(auth()->user()->unreadNotifications as $notification)
+                        class="absolute right-0 bg-white border border-gray-300 shadow-lg p-2 mt-2 w-64 max-h-80 overflow-y-auto">
+
+                        @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
                             <div class="p-2 border-b">
                                 📢 {{ $notification->data['message'] }}
                                 <small class="text-gray-500">{{ $notification->created_at->diffForHumans() }}</small>
@@ -56,8 +57,16 @@
                         @empty
                             <p class="p-2">No new notifications.</p>
                         @endforelse
+
+                        @if (auth()->user()->unreadNotifications->count() > 2)
+                            <div class="text-center p-2">
+                                <a href="{{ route('notifications.index') }}" class="text-blue-600 hover:underline">
+                                    Show All Notifications
+                                </a>
+                            </div>
+                        @endif
                     </div>
-                </li>                
+                </li>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -78,6 +87,9 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('notifications.index')">
+                            {{ __('Notification') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->

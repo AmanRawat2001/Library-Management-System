@@ -17,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @foreach ($borrowRequests as $request)
+                    @forelse ($borrowRequests as $request)
                         <tr>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->title }}</td>
@@ -33,7 +33,11 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900" colspan="4">No borrow requests found.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

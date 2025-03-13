@@ -1,17 +1,6 @@
 @if (auth()->user()->isVisitor())
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-3xl font-semibold text-center text-gray-900 mb-6">Visitor Dashboard</h1>
-        @php
-            $userId = Auth::id();
-            $userBooksCount = App\Models\BookUser::where('user_id', $userId)->count();
-            $borrowed = App\Models\BookUser::where('user_id', $userId)->where('status', 'borrowed')->count();
-            $returned = App\Models\BookUser::where('user_id', $userId)->where('status', 'returned')->count();
-            $pendingReturn = App\Models\BookUser::where('user_id', $userId)->where('status', 'pending_return')->count();
-            $pendingReservation = App\Models\Reservation::where('user_id', $userId)
-                ->where('status', 'pending')
-                ->count();
-            $reserved = App\Models\Reservation::where('user_id', $userId)->where('status', 'reserved')->count();
-        @endphp
         <!-- Flexbox for Layout -->
         <div class="flex flex-col md:flex-row gap-6">
             <!-- Left Side: Statistics -->

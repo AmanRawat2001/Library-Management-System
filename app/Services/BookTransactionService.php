@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\NotificationHelper;
 use App\Models\Book;
 use App\Models\Reservation;
 use App\Models\User;
@@ -24,6 +25,8 @@ class BookTransactionService
                 'status' => 'pending',
                 'requested_at' => Carbon::now(),
             ]);
+            // Notify admin
+            NotificationHelper::notifyAdmin('User '.Auth::user()->name." has requested to borrow '{$book->title}'.");
 
             return ['success' => 'Book successfully booked. Please wait for approval.'];
         }
@@ -49,6 +52,8 @@ class BookTransactionService
                 'status' => 'reserved',
             ]);
 
+            NotificationHelper::notifyAdmin('User '.Auth::user()->name." has reserved '{$book->title}'.");
+
             return ['success' => 'Book reserved successfully.'];
         }
 
@@ -65,6 +70,8 @@ class BookTransactionService
                 'status' => 'returned',
                 'returned_at' => Carbon::now(),
             ]);
+            NotificationHelper::notifyAdmin('User '.Auth::user()->name." has returned '{$book->title}'.");
+
             $reservation = Reservation::where('book_id', $book->id)->where('status', 'reserved')->orderBy('created_at', 'asc')->first();
 
             if ($reservation) {
@@ -74,7 +81,9 @@ class BookTransactionService
                 ]);
                 $reservation->delete();
 
-                return ['success' => "Book returned and assigned to {$reservation->user->name}."];
+                NotificationHelper::notifyAdmin("User {$reservation->user->name} has been assigned '{$book->title}'.");
+
+                return ['success' => 'Book returned successfully.'];
             }
 
             return ['success' => 'Book returned successfully.'];
@@ -96,6 +105,7 @@ class BookTransactionService
                 'due_date' => Carbon::now()->addDays(10),
             ]);
             $user->notify(new BorrowRequestNotification('approved', $book->title));
+            NotificationHelper::notifyAdmin("User {$user->name} has borrowed '{$book->title}'.");
 
             return redirect()->back()->with('success', 'Borrow request approved.');
         }
@@ -107,6 +117,7 @@ class BookTransactionService
     {
         $user->books()->detach($book->id);
         $user->notify(new BorrowRequestNotification('denied', $book->title));
+        NotificationHelper::notifyAdmin("Borrow request for '{$book->title}' by {$user->name} has been denied.");
 
         return redirect()->back()->with('success', 'Borrow request denied.');
     }

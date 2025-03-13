@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['pending', 'borrowed', 'returned'])->default('pending');
+            $table->enum('status', ['pending', 'borrowed', 'pending_return', 'returned'])->default('pending');
             $table->date('due_date')->nullable();
             $table->timestamp('requested_at')->nullable();
+            $table->timestamp('return_requested_at')->nullable();
             $table->timestamp('borrowed_at')->nullable();
             $table->timestamp('returned_at')->nullable();
             $table->timestamps();

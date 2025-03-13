@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Reservation;
 use App\Models\User;
 use App\Services\BookTransactionService;
 
@@ -22,6 +23,13 @@ class BookTransactionController extends Controller
         return view('borrow_requests', compact('borrowRequests'));
     }
 
+    public function returnRequests()
+    {
+        $returnRequests = $this->bookTransactionService->getReturnRequests();
+
+        return view('return_requests', compact('returnRequests'));
+    }
+
     public function borrowBook(Book $book)
     {
         $result = $this->bookTransactionService->borrowBook($book);
@@ -32,6 +40,13 @@ class BookTransactionController extends Controller
     public function reserveBook(Book $book)
     {
         $result = $this->bookTransactionService->reserveBook($book);
+
+        return redirect()->back()->with(key($result), reset($result));
+    }
+
+    public function cancelReservation(Reservation $reservation)
+    {
+        $result = $this->bookTransactionService->cancelReservation($reservation);
 
         return redirect()->back()->with(key($result), reset($result));
     }
@@ -53,6 +68,20 @@ class BookTransactionController extends Controller
     public function denyBorrowRequest(Book $book, User $user)
     {
         $result = $this->bookTransactionService->denyBorrowRequest($book, $user);
+
+        return redirect()->back()->with(key($result), reset($result));
+    }
+
+    public function approveReturnRequest(Book $book, User $user)
+    {
+        $result = $this->bookTransactionService->approveReturnRequest($book, $user);
+
+        return redirect()->back()->with(key($result), reset($result));
+    }
+
+    public function denyReturnRequest(Book $book, User $user)
+    {
+        $result = $this->bookTransactionService->denyReturnRequest($book, $user);
 
         return redirect()->back()->with(key($result), reset($result));
     }

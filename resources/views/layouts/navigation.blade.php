@@ -32,6 +32,11 @@
                             {{ __('Borrow Requests') }}
                         </x-nav-link>
                     </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('return_requests')" :active="request()->routeIs('return_requests')">
+                            {{ __('Return Requests') }}
+                        </x-nav-link>
+                    </div>
                 @endif
             </div>
 

@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Helpers\NotificationHelper;
 use App\Models\Book;
+use App\Models\BookUser;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Notifications\BorrowRequestNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class BookTransactionService
 {
@@ -38,7 +38,7 @@ class BookTransactionService
     {
         $existingReservation = Reservation::where('user_id', Auth::user()->id)
             ->where('book_id', $book->id)
-            ->where('status', 'reserved')
+            ->where('status', 'pending')
             ->exists();
 
         if ($existingReservation) {
@@ -49,7 +49,7 @@ class BookTransactionService
             Reservation::create([
                 'user_id' => auth()->id(),
                 'book_id' => $book->id,
-                'status' => 'reserved',
+                'status' => 'pending',
             ]);
 
             NotificationHelper::notifyAdmin('User '.Auth::user()->name." has reserved '{$book->title}'.");
@@ -60,6 +60,17 @@ class BookTransactionService
         return ['error' => 'This book is available. You can book it instead.'];
     }
 
+    public function cancelReservation(Reservation $reservation)
+    {
+        if ($reservation->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $reservation->delete();
+
+        return ['success' => 'Reservation canceled successfully.'];
+    }
+
     public function returnBook(Book $book)
     {
         $borrowed = Auth::user()->books()->where('book_id', $book->id)->wherePivot('status', 'borrowed')->first();
@@ -67,26 +78,12 @@ class BookTransactionService
         if ($borrowed) {
             $book->increment('stock');
             Auth::user()->books()->updateExistingPivot($book->id, [
-                'status' => 'returned',
-                'returned_at' => Carbon::now(),
+                'status' => 'pending_return',
+                'return_requested_at' => Carbon::now(),
             ]);
-            NotificationHelper::notifyAdmin('User '.Auth::user()->name." has returned '{$book->title}'.");
+            NotificationHelper::notifyAdmin('User '.Auth::user()->name." has requested to return '{$book->title}'. Please review.");
 
-            $reservation = Reservation::where('book_id', $book->id)->where('status', 'reserved')->orderBy('created_at', 'asc')->first();
-
-            if ($reservation) {
-                $reservation->user->books()->attach($book->id, [
-                    'status' => 'pending',
-                    'requested_at' => Carbon::now(),
-                ]);
-                $reservation->delete();
-
-                NotificationHelper::notifyAdmin("User {$reservation->user->name} has been assigned '{$book->title}'.");
-
-                return ['success' => 'Book returned successfully.'];
-            }
-
-            return ['success' => 'Book returned successfully.'];
+            return ['success' => 'Book returned successfully and pending approval.'];
         }
 
         return ['error' => 'You did not borrow this book.'];
@@ -107,10 +104,10 @@ class BookTransactionService
             $user->notify(new BorrowRequestNotification('approved', $book->title));
             NotificationHelper::notifyAdmin("User {$user->name} has borrowed '{$book->title}'.");
 
-            return redirect()->back()->with('success', 'Borrow request approved.');
+            return ['success' => 'Borrow request approved.'];
         }
 
-        return redirect()->back()->with('error', 'Book is out of stock.');
+        return ['error' => 'Book is out of stock.'];
     }
 
     public function denyBorrowRequest(Book $book, User $user)
@@ -119,15 +116,60 @@ class BookTransactionService
         $user->notify(new BorrowRequestNotification('denied', $book->title));
         NotificationHelper::notifyAdmin("Borrow request for '{$book->title}' by {$user->name} has been denied.");
 
-        return redirect()->back()->with('success', 'Borrow request denied.');
+        return ['success' => 'Borrow request denied.'];
+    }
+
+    public function approveReturnRequest(Book $book, User $user)
+    {
+        $returnRequest = $user->books()->where('book_id', $book->id)->wherePivot('status', 'pending_return')->first();
+
+        if ($returnRequest) {
+            $book->increment('stock');
+            $user->books()->updateExistingPivot($book->id, [
+                'status' => 'returned',
+                'returned_at' => Carbon::now(),
+            ]);
+            $user->notify(new BorrowRequestNotification('approved', $book->title));
+            NotificationHelper::notifyAdmin("User {$user->name} has returned '{$book->title}'.");
+
+            $reservation = Reservation::where('book_id', $book->id)->where('status', 'pending')->orderBy('created_at', 'asc')->first();
+
+            if ($reservation) {
+                $reservation->user->books()->attach($book->id, [
+                    'status' => 'pending',
+                    'requested_at' => Carbon::now(),
+                ]);
+
+                $reservation->update(['status' => 'reserved']);
+
+                NotificationHelper::notifyAdmin("User {$reservation->user->name} has been assigned '{$book->title}'.");
+
+                return ['success' => 'Book returned successfully and assigned to the next user.'];
+            }
+
+            return ['success' => 'Return request approved.'];
+        }
+
+        return ['error' => 'Return request denied.'];
+    }
+
+    public function denyReturnRequest(Book $book, User $user)
+    {
+        $user->books()->updateExistingPivot($book->id, ['status' => 'borrowed']);
+        $user->notify(new BorrowRequestNotification('denied', $book->title));
+        NotificationHelper::notifyAdmin("Return request for '{$book->title}' by {$user->name} has been denied.");
+
+        return ['success' => 'Return request denied.'];
+    }
+
+    public function getReturnRequests()
+    {
+        return BookUser::pendingReturns()->get();
     }
 
     public function getBorrowRequests()
     {
-        return DB::table('book_user')->where('status', 'pending')
-            ->join('books', 'book_user.book_id', '=', 'books.id')
-            ->join('users', 'book_user.user_id', '=', 'users.id')
-            ->select('book_user.*', 'books.title', 'users.name', 'users.id as user_id')
-            ->get();
+
+        return BookUser::pendingBorrowRequests()->get();
     }
 }

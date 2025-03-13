@@ -18,7 +18,7 @@ class Book extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('status', 'due_date', 'requested_at', 'borrowed_at', 'returned_at');
+        return $this->belongsToMany(User::class)->withPivot('status', 'due_date', 'return_requested_at', 'requested_at', 'borrowed_at', 'returned_at');
     }
 
     public function reservations()

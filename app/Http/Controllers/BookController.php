@@ -76,7 +76,7 @@ class BookController extends Controller
 
     private function assignReservedBooks(Book $book)
     {
-        $reservations = $book->reservations()->where('status', 'reserved')->orderBy('created_at', 'asc')->get();
+        $reservations = $book->reservations()->where('status', 'pending')->orderBy('created_at', 'asc')->get();
 
         foreach ($reservations as $reservation) {
             if ($book->stock > 0) {
@@ -85,8 +85,7 @@ class BookController extends Controller
                     'requested_at' => Carbon::now(),
                 ]);
                 NotificationHelper::notifyAdmin("{$reservation->user->name} has been assigned the book {$book->title}");
-                $book->decrement('stock');
-                $reservation->delete();
+                $reservation->update(['status' => 'reserved']);
             } else {
                 break;
             }

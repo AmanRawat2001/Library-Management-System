@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['reserved', 'cancelled'])->default('reserved');
+            $table->enum('status', ['pending', 'reserved', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }

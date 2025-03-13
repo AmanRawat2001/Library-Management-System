@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Borrow Requests
+            Return Requests
         </h2>
     </x-slot>
 
@@ -17,17 +17,17 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    @forelse ($borrowRequests as $request)
+                    @forelse ($returnRequests as $request)
                         <tr>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->user->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $request->book->title }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $request->requested_at }}</td>
                             <td class="px-6 py-4 text-sm">
-                                <form action="{{ route('books.approve', [$request->book_id, $request->user_id]) }}" method="POST">
+                                <form action="{{ route('return.approve', [$request->book_id, $request->user_id]) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="text-green-500 hover:text-green-700">✔ Approve</button>
                                 </form>
-                                <form action="{{ route('books.deny', [$request->book_id, $request->user_id]) }}" method="POST">
+                                <form action="{{ route('return.deny', [$request->book_id, $request->user_id]) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="text-red-500 hover:text-red-700">❌ Deny</button>
                                 </form>
@@ -35,7 +35,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td class="px-6 py-4 text-sm text-gray-900" colspan="4">No borrow requests found.</td>
+                            <td class="px-6 py-4 text-sm text-gray-900" colspan="4">No return requests</td>
                         </tr>
                     @endforelse
                 </tbody>

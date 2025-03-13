@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
-        // only allow admin roles
-        $this->middleware('role:admin');
-    }
-
     /**
      * Display a listing of the resource.
      */

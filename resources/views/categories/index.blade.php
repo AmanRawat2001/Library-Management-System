@@ -7,7 +7,7 @@
 
     <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Top Bar: Search & Add Button -->
-        <div class="flex flex-wrap justify-between items-center mb-6 px-4">
+        <div class="flex flex-wrap justify-between gap-4 items-center mb-6 px-4">
             <form method="GET" action="{{ route('categories.index') }}" class="flex items-center w-full md:w-auto">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="border border-gray-300 rounded-l px-4 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"

@@ -7,7 +7,7 @@
 
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Top Bar: Search & Add Button -->
-        <div class="flex flex-wrap justify-between items-center mb-6 px-4">
+        <div class="flex flex-wrap justify-between gap-4 items-center mb-6 px-4">
             <form method="GET" action="{{ route('books.index') }}" class="flex items-center w-full md:w-auto">
                 <input type="text" name="search" value="{{ request('search') }}"
                     class="border border-gray-300 rounded-l px-4 py-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64"
@@ -29,22 +29,25 @@
             <table class="min-w-full border-collapse divide-y divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Title</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Author</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Category Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
+                        
+                        <th class="block md:hidden px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Book Details </th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">ID</th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Title</th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Author</th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Stock</th>
+                        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Category Name</th>
+                        <th class=" px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse ($books as $book)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $book->id }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $book->title }}</td>
-                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">{{ $book->author }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $book->stock }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $book->category?->name }}</td>
+                            <td class="md:hidden px-2 py-4 text-sm text-gray-900">Book Title -:{{ $book->title }} <br> Book Author-: {{ $book->author }} <br>Book Stock -: {{ $book->stock }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{{ $book->id }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{{ $book->title }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm font-semibold text-gray-900">{{ $book->author }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-600">{{ $book->stock }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-600">{{ $book->category?->name }}</td>
                             <td class="px-6 py-4 text-sm font-medium flex space-x-3">
                                 <a href="{{ route('books.show', $book->id) }}"
                                     class="text-blue-500 hover:text-blue-700">View</a>

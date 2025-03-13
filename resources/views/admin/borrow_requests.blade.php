@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 text-center md:text-left leading-tight">
             Borrow Requests
         </h2>
     </x-slot>
@@ -26,14 +26,13 @@
                         <tr>
                             <td class="md:hidden px-2 py-4 text-sm text-gray-900">User Name -:{{ $request->user->name }}
                                 <br> Book Title-: {{ $request->book->title }} <br> Requested Date -:
-                                {{ $request->requested_at }}
+                                {{Illuminate\Support\Carbon::parse($request->requested_at)->format('jS M Y') }}
                             </td>
                             <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{{ $request->user->name }}
                             </td>
                             <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{{ $request->book->title }}
                             </td>
-                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-600">
-                                {{ $request->requested_at }}</td>
+                            <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-600">{{Illuminate\Support\Carbon::parse($request->requested_at)->format('jS M Y') }}</td>
                             <td class="px-6 py-4 text-sm">
                                 <form action="{{ route('books.approve', [$request->book_id, $request->user_id]) }}"
                                     method="POST" class="approveForm">

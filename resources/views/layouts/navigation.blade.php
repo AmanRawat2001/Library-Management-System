@@ -54,14 +54,26 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <li class="relative" x-data="{ showNotifications: false }">
-                    <button @click="showNotifications = !showNotifications" class="relative">
-                        🛎 Notifications ({{ auth()->user()->unreadNotifications->count() }})
+                <div class="relative" x-data="{ showNotifications: false }">
+                    <button @click="showNotifications = !showNotifications"
+                        class="relative text-gray-600 hover:text-gray-800">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6 6 0 00-9.33-4.95A4.978 4.978 0 007 11v3c0 .638-.265 1.217-.695 1.595L5 17h10z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 21h-2" />
+                        </svg>
+                        @if (auth()->user()->unreadNotifications->count() > 0)
+                            <span
+                                class="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
                     </button>
 
+                    <!-- Notification Dropdown -->
                     <div x-show="showNotifications" @click.away="showNotifications = false"
                         class="absolute right-0 bg-white border border-gray-300 shadow-lg p-2 mt-2 w-64 max-h-80 overflow-y-auto">
-
                         @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
                             <div class="p-2 border-b">
                                 📢 {{ $notification->data['message'] }}
@@ -83,7 +95,7 @@
                             </div>
                         @endif
                     </div>
-                </li>
+                </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -106,7 +118,7 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('notifications.index')">
-                            {{ __('Notification') }}
+                            {{ __('Notifications') }} ({{ auth()->user()->unreadNotifications->count() }})
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -124,9 +136,25 @@
             </div>
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+            <div class="flex items-center sm:hidden">
+                <a href="{{ route('notifications.index') }}" class="relative text-gray-600 hover:text-gray-800">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6 6 0 00-9.33-4.95A4.978 4.978 0 007 11v3c0 .638-.265 1.217-.695 1.595L5 17h10z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 21h-2" />
+                    </svg>
+                    @if (auth()->user()->unreadNotifications->count() > 0)
+                        <span
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
+                    @endif
+                </a>
+
+                <!-- Hamburger Menu -->
+                <button @click="open = !open"
+                    class="ml-4 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -190,6 +218,9 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('notifications.index')">
+                    {{ __('Notifications') }} ({{ auth()->user()->unreadNotifications->count() }})
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

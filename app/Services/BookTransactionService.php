@@ -133,8 +133,8 @@ class BookTransactionService
                 'returned_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
-            $user->notify(new BorrowRequestNotification('approved', $book->title));
             NotificationHelper::notifyAdmin("User {$user->name} has returned '{$book->title}'.");
+            $user->notify(new BorrowRequestNotification('approved', $book->title));
 
             $reservation = Reservation::where('book_id', $book->id)->where('status', 'pending')->orderBy('created_at', 'asc')->first();
 

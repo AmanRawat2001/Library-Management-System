@@ -3,7 +3,7 @@
         <h1 class="text-3xl font-semibold text-center text-gray-900 mb-6">Visitor Dashboard</h1>
         @php
             $userId = Auth::id();
-            $totalBooks = App\Models\BookUser::where('user_id', $userId)->count();
+            $userBooksCount = App\Models\BookUser::where('user_id', $userId)->count();
             $borrowed = App\Models\BookUser::where('user_id', $userId)->where('status', 'borrowed')->count();
             $returned = App\Models\BookUser::where('user_id', $userId)->where('status', 'returned')->count();
             $pendingReturn = App\Models\BookUser::where('user_id', $userId)->where('status', 'pending_return')->count();
@@ -18,8 +18,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Total Books -->
                 <div class="bg-blue-100 p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Total Books</h3>
-                    <p class="text-3xl font-bold text-blue-600">{{ $totalBooks }}</p>
+                    <h3 class="text-lg font-semibold text-gray-700">User Book Count</h3>
+                    <p class="text-3xl font-bold text-blue-600">{{ $userBooksCount }}</p>
                 </div>
 
                 <!-- Borrowed Books -->

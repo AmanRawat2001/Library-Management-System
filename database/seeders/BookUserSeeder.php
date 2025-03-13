@@ -16,7 +16,7 @@ class BookUserSeeder extends Seeder
     {
         $statuses = ['pending', 'borrowed', 'returned', 'pending_return'];
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $visitor = User::where('role', 'visitor')->inRandomOrder()->first();
 
             if ($visitor) {

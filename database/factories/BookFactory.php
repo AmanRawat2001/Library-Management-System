@@ -19,11 +19,11 @@ class BookFactory extends Factory
     {
         static $authors = [];
         if (empty($authors)) {
-            $authors = collect(range(1, 3))->map(fn () => fake()->name())->toArray();
+            $authors = collect(range(1, 5))->map(fn () => fake()->name())->toArray();
         }
 
         return [
-            'title' => $this->faker->sentence(3),
+            'title' => $this->faker->sentence(2),
             'author' => $this->faker->randomElement($authors),
             'stock' => $this->faker->numberBetween(1, 5),
             'category_id' => Category::inRandomOrder()->first()->id,

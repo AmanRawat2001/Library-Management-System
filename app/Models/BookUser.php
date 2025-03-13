@@ -54,6 +54,7 @@ class BookUser extends Model
     public static function topReader()
     {
         return self::select('user_id', DB::raw('COUNT(book_id) as books_read'))
+            ->where('status', '!=', 'pending')
             ->groupBy('user_id')
             ->orderBy('books_read', 'DESC')
             ->limit(10);
@@ -62,6 +63,7 @@ class BookUser extends Model
     public static function topBook()
     {
         return self::select('book_id', DB::raw('COUNT(user_id) as times_read'))
+            ->where('status', '!=', 'pending')
             ->groupBy('book_id')
             ->orderBy('times_read', 'DESC')
             ->limit(10);

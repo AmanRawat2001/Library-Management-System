@@ -56,6 +56,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-6">
+            {{ $borrowRequests->links() }}
+        </div>
     </div>
 
     <script>

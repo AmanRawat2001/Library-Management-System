@@ -56,6 +56,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-6">
+            {{ $returnRequests->links() }}
+        </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

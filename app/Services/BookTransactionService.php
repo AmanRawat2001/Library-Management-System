@@ -169,13 +169,13 @@ class BookTransactionService
 
     public function getReturnRequests()
     {
-        return BookUser::pendingReturns()->get();
+        return BookUser::pendingReturns()->paginate(10);
     }
 
     public function getBorrowRequests()
     {
 
-        return BookUser::pendingBorrowRequests()->get();
+        return BookUser::pendingBorrowRequests()->paginate(10);
     }
 
     public function getBooks()

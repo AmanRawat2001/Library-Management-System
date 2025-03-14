@@ -42,13 +42,12 @@ class BookUser extends Model
 
     public function scopePendingReturns($query)
     {
-        return $query->where('status', 'pending_return')
-            ->with(['book', 'user']);
+        return $query->where('status', 'pending_return') ->with(['book', 'user'])->latest();
     }
 
     public function scopePendingBorrowRequests($query)
     {
-        return $query->where('status', 'pending')->with(['book', 'user']);
+        return $query->where('status', 'pending')->with(['book', 'user'])->latest();
     }
 
     public static function topReader()

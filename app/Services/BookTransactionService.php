@@ -67,7 +67,7 @@ class BookTransactionService
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
 
-        $reservation->delete();
+        $reservation->update(['status' => 'cancelled']);
 
         return ['success' => 'Reservation canceled successfully.'];
     }

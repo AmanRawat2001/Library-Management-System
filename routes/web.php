@@ -34,8 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/books/{book}/reserve', [BookTransactionController::class, 'reserveBook'])->name('books.reserve');
     Route::delete('/books/cancel-reservation/{reservation}', [BookTransactionController::class, 'cancelReservation'])->name('books.cancel');
     Route::post('/books/{book}/return', [BookTransactionController::class, 'returnBook'])->name('books.return');
-    Route::get('borrowed_books', [BookTransactionController::class, 'borrowedBooks'])->name('borrowed_books');
-    Route::get('reserved_books', [BookTransactionController::class, 'reservedBooks'])->name('reserved_books');
+    Route::get('borrowed_books', [BookTransactionController::class, 'userborrowedBooks'])->name('borrowed_books');
+    Route::get('reserved_books', [BookTransactionController::class, 'userReservedBooks'])->name('reserved_books');
 
     Route::resource('notifications', NotificationController::class)->only(['index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');

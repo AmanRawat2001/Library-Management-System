@@ -118,6 +118,21 @@ class BookTransactionService
         $user->books()->detach($book->id);
         $user->notify(new BorrowRequestNotification('denied', $book->title));
         NotificationHelper::notifyAdmin("Borrow request for '{$book->title}' by {$user->name} has been denied.");
+        $reservation = Reservation::where('book_id', $book->id)->where('status', 'pending')->orderBy('created_at', 'asc')->first();
+
+            if ($reservation) {
+                $reservation->user->books()->attach($book->id, [
+                    'status' => 'pending',
+                    'requested_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                ]);
+
+                $reservation->update(['status' => 'reserved']);
+
+                NotificationHelper::notifyAdmin("User {$reservation->user->name} has been assigned '{$book->title}'.");
+
+                return ['success' => 'Book returned successfully and assigned to the next user.'];
+            }
 
         return ['success' => 'Borrow request denied.'];
     }
@@ -178,12 +193,12 @@ class BookTransactionService
         return BookUser::pendingBorrowRequests()->paginate(10);
     }
 
-    public function getBooks()
+    public function getUserBooks()
     {
         return Auth::user()->books()->paginate(10);
     }
 
-    public function getReservedBooks()
+    public function getUserReservedBooks()
     {
         return Auth::user()->reservations()->paginate(10);
     }

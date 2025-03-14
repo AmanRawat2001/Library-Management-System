@@ -39,6 +39,7 @@ class BookController extends Controller
     public function show(Book $book)
     {
         $bookHistory = $book->bookUsers()->orderBy('created_at', 'desc')->get();
+
         return view('books.show', compact('book', 'bookHistory'));
     }
 

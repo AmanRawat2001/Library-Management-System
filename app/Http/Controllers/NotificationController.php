@@ -13,9 +13,6 @@ class NotificationController extends Controller
         return view('notifications.index', compact('notifications'));
     }
 
-    /**
-     * Mark the notification as read.
-     */
     public function markAsRead($id)
     {
         $notification = Auth::user()->notifications()->where('id', $id)->first();
@@ -29,9 +26,6 @@ class NotificationController extends Controller
         return back()->with('error', 'Notification not found.');
     }
 
-    /**
-     * Mark all notifications as read.
-     */
     public function markAllAsRead()
     {
         Auth::user()->unreadNotifications->markAsRead();

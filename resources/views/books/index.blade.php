@@ -6,7 +6,6 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-        <!-- Top Bar: Search & Add Button -->
         <div class="flex flex-wrap justify-between gap-4 items-center mb-6 px-4">
             <form method="GET" action="{{ route('books.index') }}" class="flex items-center w-full md:w-auto">
                 <input type="text" name="search" value="{{ request('search') }}"
@@ -24,7 +23,6 @@
             @endif
         </div>
 
-        <!-- User Table -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full border-collapse divide-y divide-gray-200">
                 <thead class="bg-gray-100">
@@ -89,14 +87,11 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Pagination -->
         <div class="mt-6">
             {{ $books->links() }}
         </div>
     </div>
 
-    <!-- SweetAlert Delete Confirmation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.deleteButton').forEach(button => {

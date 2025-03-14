@@ -14,7 +14,6 @@ class BookController extends Controller
 {
     public function __construct()
     {
-        // only allow admin roles
         $this->middleware('role:admin')->only('create', 'store', 'destroy', 'updated', 'edit');
     }
 

@@ -7,15 +7,12 @@
 
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="bg-white shadow-lg rounded-lg p-6">
-            <!-- Form Title -->
             <h3 class="text-lg font-semibold text-gray-700 mb-4">Fill in the details below:</h3>
 
             <form method="POST" action="{{ route('books.store') }}" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Grid Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Employee Code -->
                     <div>
                         <label for="title" class="block font-medium text-gray-700">Book Title</label>
                         <input type="text" name="title" id="title"
@@ -26,7 +23,6 @@
                         @enderror
                     </div>
 
-                    <!-- Employee Name -->
                     <div>
                         <label for="author" class="block font-medium text-gray-700">Book Author</label>
                         <input type="text" name="author" id="author"
@@ -36,8 +32,6 @@
                             <p class="text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Employee Email -->
                     <div>
                         <label for="stock" class="block font-medium text-gray-700">Book Stock</label>
                         <input type="text" name="stock" id="stock"
@@ -62,8 +56,6 @@
                         @enderror
                     </div>
                 </div>
-
-                <!-- Submit Button -->
                 <div class="flex items-center justify-between px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <a href="{{ route('books.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md">

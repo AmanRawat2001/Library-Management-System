@@ -19,10 +19,9 @@
 
             <form method="POST" action="{{ route('books.update', $book->id) }}" enctype="multipart/form-data">
                 @csrf
-                @method('PUT') <!-- Ensures it's an update request -->
+                @method('PUT')
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Book Title -->
                     <div>
                         <label for="title" class="block font-medium text-gray-700">Book Title</label>
                         <input type="text" name="title" id="title"
@@ -33,7 +32,6 @@
                         @enderror
                     </div>
 
-                    <!-- Book Author -->
                     <div>
                         <label for="author" class="block font-medium text-gray-700">Book Author</label>
                         <input type="text" name="author" id="author"
@@ -43,8 +41,6 @@
                             <p class="text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Book Stock -->
                     <div>
                         <label for="stock" class="block font-medium text-gray-700">Book Stock</label>
                         <input type="text" name="stock" id="stock"
@@ -54,8 +50,6 @@
                             <p class="text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Category Selection -->
                     <div>
                         <label for="category_id" class="block font-medium text-gray-700">Category Name</label>
                         <select name="category_id" id="category_id"

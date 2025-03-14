@@ -20,8 +20,6 @@ class DashboardController extends Controller
             $pendingReturn = BookUser::where('user_id', $userId)->where('status', 'pending_return')->count();
             $pendingReservation = Reservation::where('user_id', $userId)->where('status', 'pending')->count();
             $reserved = Reservation::where('user_id', $userId)->where('status', 'reserved')->count();
-
-            // Initialize admin-related variables to avoid "undefined variable" errors
             $totalBooks = null;
             $totalUsers = null;
             $topBooks = null;
@@ -36,10 +34,9 @@ class DashboardController extends Controller
             $pendingReturn = BookUser::where('status', 'pending_return')->count();
             $pendingReservation = Reservation::where('status', 'pending')->count();
             $reserved = Reservation::where('status', 'reserved')->count();
-
-            // Fetch top books and top readers
             $topBooks = BookUser::topBook()->with('book:id,title')->get();
             $topReaders = BookUser::topReader()->with('user:id,name')->get();
+            $userBooksCount = null;
         }
 
         return view('dashboard', compact(

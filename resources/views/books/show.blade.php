@@ -22,7 +22,6 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
-        <!-- role Details Card -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="px-6 py-4">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">Book Information</h3>
